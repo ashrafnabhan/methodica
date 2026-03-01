@@ -1,0 +1,28 @@
+---
+title: "Methodica"
+image: profile.jpg
+toc: false
+about: 
+  template: jolla 
+  image-shape: round
+  image-width: 17em
+  links: 
+    - icon: instagram
+      text: Instagram
+      href: https://www.instagram.com/methodica.med
+      target: _blank
+    - icon: tiktok
+      text: Tiktok
+      href: https://vt.tiktok.com/ZSPtuwjTX/
+      target: _blank
+    - icon: facebook
+      text: Facebook
+      href: https://www.facebook.com/profile.php?id=61584727045966
+      target: _blank 
+    - text: Email
+      href: mailto:anabhan@med.asu.edu.eg
+---
+
+## Designing Clinical Research
+
+Designing Clinical Research program offers a focused approach to understanding and conducting medical research. This program equips trainees with essential research skills through modules that emphasize both theoretical and practical aspects.

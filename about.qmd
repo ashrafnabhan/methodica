@@ -1,0 +1,259 @@
+---
+title: "Designing Clinical Research"
+---
+
+[{{< fa calendar-days >}}]{style="color:green;"} **14 - 15 February 2026** -- [{{< fa location-dot >}}]{style="color:red;"} **Cairo, Egypt**
+
+### Provider and Course Director:
+
+**Professor Ashraf Nabhan**
+
+Professor of Obstetrics and Gynecology, Ain Shams University
+
+Chair of Medical Research Department, MTI University
+
+### Organizers
+
+Methodica Team
+
+## **Course Overview**
+
+This live educational event is a structured continuing medical education program designed to equip healthcare professionals with the essential knowledge and practical skills required to design, conduct, analyze, and report high-quality medical research in accordance with international ethical and scientific standards.
+
+The course emphasizes **evidence-based medicine, research integrity, and methodological rigor**, supporting participants in translating research findings into improved clinical practice and healthcare outcomes.
+
+### Intended target audience
+
+Physicians, , other Healthcare Professionals, and undergraduates with an interest in clinical research.
+
+This course is intended for:
+
+-   Medical doctors and specialists
+
+-   Residents and postgraduate trainees
+
+-   Academic clinicians and clinical educators
+
+-   Healthcare professionals involved in research activities including dentists, pharmacists, nurses .. etc
+
+-   Public health professionals and allied healthcare researchers
+
+-   undergraduates with an interest in clinical research
+
+## **Educational Need and Rationale**
+
+Healthcare professionals are increasingly required to:
+
+-   Interpret and apply research evidence in clinical decision-making
+
+-   Participate in clinical and translational research
+
+-   Publish in peer-reviewed journals
+
+-   Comply with ethical, regulatory, and governance standards
+
+This course addresses identified gaps in **research methodology, critical appraisal, data analysis, and scientific communication**, in line with international principles for continuing professional development.
+
+### Intended Learning Outcomes
+
+1.  Formulate clinically relevant research questions using appropriate frameworks
+
+2.  Select and justify suitable study designs for medical research
+
+3.  Apply principles of research ethics, governance, and regulatory compliance
+
+4.  Perform basic statistical analyses and interpret research data
+
+5.  Critically appraise medical literature and systematic reviews
+
+6.  Prepare research protocols, abstracts, and manuscripts for publication
+
+### Career outcomes
+
+Trainees can explore various career paths in medical research, clinical trials, and healthcare services. Potential roles include research scientist, clinical researcher, or positions within pharmaceutical companies and academic institutions. We will prepare trainees for both further study and professional practice in medical research-related fields.
+
+### Workshop venue
+
+Faculty of Medicine, Ain Shams University, Cairo, Egypt
+
+### When
+
+Day 1: 14-February-2026 - 9:00 AM till 6:00 PM
+
+Day 2: 15-February-2026 - 9:00 AM till 6:00 PM
+
+## **Course Structure and Content**
+
+#### Day 1: Fundamentals of Clinical Research
+
+Location: Faculty of Medicine, Ain Shams University
+
++----------------+----------------------------------------------------+
+| Time           | Session                                            |
++:===============+:===================================================+
+| 9:00 – 9:15    | Registration & Introduction                        |
++----------------+----------------------------------------------------+
+| 9:15 – 10:15   | Introduction to Rigorous Research                  |
+|                |                                                    |
+|                | Purpose of research                                |
+|                |                                                    |
+|                | Clinical research questions                        |
++----------------+----------------------------------------------------+
+| 10:15 – 11:15  | Population vs sample                               |
+|                |                                                    |
+|                | Parameters vs statistics                           |
+|                |                                                    |
+|                | Inclusion and exclusion criteria                   |
+|                |                                                    |
+|                | Homogeneity vs generalizability                    |
++----------------+----------------------------------------------------+
+| 11:15 – 11:30  | Break                                              |
++----------------+----------------------------------------------------+
+| 11:30 – 12:30  | Types of variables                                 |
+|                |                                                    |
+|                | Identifying confounders                            |
++----------------+----------------------------------------------------+
+| 12:30 – 1:30   | Types of data                                      |
+|                |                                                    |
+|                | Enhancing precision and accuracy of measurements   |
++----------------+----------------------------------------------------+
+| 1:30 – 2:15    | Break                                              |
++----------------+----------------------------------------------------+
+| 2:15 – 3:15    | How to write a research hypothesis                 |
+|                |                                                    |
+|                | The null hypothesis                                |
++----------------+----------------------------------------------------+
+| 3:15 – 4:30    | Sampling methods                                   |
+|                |                                                    |
+|                | Common sample-size mistakes                        |
+|                |                                                    |
+|                | Sample size calculation                            |
++----------------+----------------------------------------------------+
+| 4:30 – 4:45    | Coffee Break                                       |
++----------------+----------------------------------------------------+
+| 4:45 – 5:45    | Essential Research Documents                       |
+|                |                                                    |
+|                | Case Report Form (CRF)                             |
+|                |                                                    |
+|                | Informed Consent Form (ICF)                        |
++----------------+----------------------------------------------------+
+| 5:45 – 6:00    | Wrap-up & Discussion                               |
++----------------+----------------------------------------------------+
+
+#### Day 2: Developing protocols of observational studies
+
+Location: MS Teams in-person
+
++----------------+----------------------------------------------------+
+| Time           | Session                                            |
++:===============+:===================================================+
+| 9:00 – 9:30    | Recap of Day 1 & Introduction to Day 2             |
++----------------+----------------------------------------------------+
+| 9:30 – 10:30   | Key components of observational study protocols    |
++----------------+----------------------------------------------------+
+| 10:30 – 11:45  | Designing Cross-Sectional Studies                  |
++----------------+----------------------------------------------------+
+| 11:45 – 12:00  | Break                                              |
++----------------+----------------------------------------------------+
+| 12:00 – 1:15   | Designing Case-Control Studies                     |
++----------------+----------------------------------------------------+
+| 1:15 – 2:00    | Break                                              |
++----------------+----------------------------------------------------+
+| 2:00 – 3:30    | Designing Cohort Studies                           |
++----------------+----------------------------------------------------+
+| 3:30 – 3:45    | Break                                              |
++----------------+----------------------------------------------------+
+| 3:45 – 5:15    | Designing Studies of Medical Tests                 |
++----------------+----------------------------------------------------+
+| 5:15 – 6:00    | Case Discussions                                   |
+|                |                                                    |
+|                | Q&A                                                |
+|                |                                                    |
+|                | Course Wrap-up                                     |
++----------------+----------------------------------------------------+
+
+## **Educational Methods**
+
+-   Live expert-led lectures
+
+-   group discussions
+
+-   Case-based learning and practical exercises
+
+-   Self-assessment quizzes
+
+-   Independent study materials
+
+Educational methods comply with **adult learning principles** and requirements for independence and educational value.
+
+## Assessment and Certification
+
+Participant assessment includes:
+
+-   Attendance and active participation
+
+-   Completion of formative assessments
+
+-   Practical assignment
+
+Successful participants receive a Certificate of Completion stating awarded CME credits.
+
+## **Accreditation and CME Credits**
+
+An application has been submitted for accreditation
+
+## **Evaluation and Quality Assurance**
+
+The course is subject to continuous quality improvement through:
+
+-   Participant feedback and satisfaction surveys
+
+-   Learning outcome evaluation
+
+-   Periodic curriculum review
+
+Feedback is used to enhance educational effectiveness in accordance with **international quality standards**.
+
+### How to register
+
+**Registration fees**
+
+A one time payment of 1500 LE covers the two days of the live educational event.
+
+**Payment to CIB bank account**
+
+IBAN: EG780010014500000100067935629
+
+**Contact us:**
+
+-   Mobile: 01062053983
+
+-   Email: methodica0\@gmail.com
+
+### **Core principles of our educational activities**
+
+-   Academic independence
+
+    -   The program is **free from commercial bias**
+
+    -   Development of curricula, design of scientific event programs, and selection of faculty are the sole responsibilities of course director.
+
+    -   Planning of this live educational event is based on needs assessment data.
+
+    -   Industry participation is **NOT** allowed during the entire curriculum development and planning process, to ensure academic independence and keep content free from bias.
+
+-   Compliance to accreditation codes
+
+    -   Planning, organization, and execution of this live educational event follow and comply with existing codes for accreditation of high-quality CME activities.
+
+-   Branding and advertising
+
+    -   No industry logos or advertising are permitted in association with education and in the area where educational activities take place.
+
+    -   No pharmaceutical or medical device company influences content or faculty selection
+
+    -   Industry staff are not allowed to interfere with the educational content or engage in educational activities during the event.
+
+-   Transparency
+
+    -   All relevant information is disclosed to the learners so that they fully understand how the content has been developed and presented. This includes conflict of interest disclosures of faculty involved in the development and delivery of the scientific content
