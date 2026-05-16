@@ -1,0 +1,107 @@
+---
+title: "Clinical Trials"
+author: "Prof. Ashraf Nabhan"
+format: 
+  beamer:
+    theme: metropolis
+    aspectratio: 169
+editor: visual
+---
+
+## Clinical trials
+
+## Review of clinical trials methods
+
+- Type of trial: parallel, multi-arm, cross-over, etc
+
+- Unit of allocation: individual, cluster
+
+- Framework: superiority, non-inferiority
+
+- Allocation: Non-random, Quasi-random, Random
+
+- Controlled or not
+
+- Phase: Only for drug trials
+
+# Sample size calculation
+
+## Preample
+
+- Estimated number of participants needed to achieve study objectives
+
+- Describe how it was determined
+
+- Explicitly indicate clinical and statistical assumptions supporting calculations.
+
+## Ingredients
+
+- treat: the expected proportion for the treatment group
+
+- control: the expected proportion for the control group
+
+- power: the required study power
+
+- r: the number in the treatment group divided by the number in the control group.
+
+- sided.test: Use a two-sided test if you wish to evaluate whether the outcome proportion in the treatment group is greater than or less than the outcome proportion in the control group.
+
+- conf.level: defining the level of confidence in the computed result.
+
+## Practical exercise
+
+- Clinical question: Among ICU patients with septic shock and AKI without urgent need for dialysis, does an early, compared to delayed, initiation of renal replacement therapy reduce all-cause mortality at 90 days?
+
+## ingredients
+
+- treat = .4
+
+- control = .5
+
+- power = .8
+
+- r = 1
+
+- sided.test = 2
+
+- conf.level = .95
+
+## Calculation
+
+- The estimated sample size is 192
+
+- Treatment arm: 96
+
+- Control arm: 96
+
+# Random allocation
+
+## Simple random allocation
+
+- Unequal groups
+
+## Random allocation rule
+
+- Equal groups at the end of full recruitment
+
+## Block randomization
+
+- Equal groups at any point of recruitment
+
+# Learning from mistakes
+
+## Comments: RCT
+
+1.  Selection bias
+
+2.  Serious contradiction in retinopathy inclusion criterion
+
+3.  Only one HbA1c measurement at the end of follow up
+
+4.  Intervention was not standardized
+
+5.  Composite outcome problem
+
+6.  Follow-up Duration
+
+# Discussion and ideas
