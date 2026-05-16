@@ -5,10 +5,9 @@ format:
   beamer:
     theme: metropolis
     aspectratio: 169
+    slide-level: 2
 editor: visual
 ---
-
-## Clinical trials
 
 ## Review of clinical trials methods
 
