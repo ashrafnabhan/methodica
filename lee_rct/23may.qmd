@@ -67,7 +67,7 @@ format:
 
 - Clinical question: Among ICU patients with septic shock and AKI without urgent need for dialysis, does an early, compared to delayed, initiation of renal replacement therapy reduce all-cause mortality at 90 days?
 
-## ingredients
+## Ingredients
 
 - treat = .4
 
