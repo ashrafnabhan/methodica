@@ -1,9 +1,10 @@
 ---
-title: "Clinical Trials"
-author: "Prof. Ashraf Nabhan"
 format: 
   beamer:
     theme: metropolis
+    author: "Prof. Ashraf Nabhan"
+    title: "Clinical Trials"
+    subtitle: "A Hands-on Workshop"
     aspectratio: 169
     slide-level: 2
     fontsize: 14pt
@@ -14,7 +15,6 @@ format:
     section-titles: true
     header-includes: |
       \setbeamertemplate{footline}[frame number]
-editor: visual
 ---
 
 ## Review of clinical trials methods
@@ -85,15 +85,37 @@ editor: visual
 
 ## Simple random allocation
 
-- Unequal groups
+- Equal probability
+
+- Unpredictability
+
+- No guarantee of balance
 
 ## Random allocation rule
 
-- Equal groups at the end of full recruitment
+- Forced equal allocation
+
+- Vulnerability to selection bias late in trial 
 
 ## Block randomization
 
-- Equal groups at any point of recruitment
+- Balanced allocation within blocks 
+
+- Protection against temporal trends
+
+- Predictability risk with fixed block sizes
+
+# Clinical trial registration
+
+## Open access primary registries
+
+- Example
+
+  - PACTR
+
+  - Clinicaltrials.gov
+
+- Mandatory
 
 # Learning from mistakes
 
