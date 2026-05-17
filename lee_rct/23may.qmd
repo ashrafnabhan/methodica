@@ -6,7 +6,7 @@ format:
     theme: metropolis
     aspectratio: 169
     slide-level: 2
-    fontsize: 17pt
+    fontsize: 14pt
     incremental: false
     toc: false
     colortheme: default
@@ -14,7 +14,6 @@ format:
     section-titles: true
     header-includes: |
       \setbeamertemplate{footline}[frame number]
-    
 editor: visual
 ---
 
