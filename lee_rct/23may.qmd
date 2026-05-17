@@ -5,19 +5,27 @@ format:
     author: "Prof. Ashraf Nabhan"
     title: "Clinical Trials"
     subtitle: "A Hands-on Workshop"
+    subject: "Research"
+    title-meta: "Clinical Trials Workshop"
+    author-meta: "Prof. A. Nabhan"
     aspectratio: 169
     slide-level: 2
     fontsize: 14pt
     incremental: false
-    toc: false
+    toc: true
+    toc-title: "What we will do today"
     colortheme: default
     navigation: horizontal
     section-titles: true
     header-includes: |
       \setbeamertemplate{footline}[frame number]
+      \setbeamertemplate{section in toc}[sections numbered]
+      \setbeamertemplate{frametitle continuation}{}
 ---
 
-## Review of clinical trials methods
+# Clinical trial Methods: A Recap
+
+## The essentials
 
 - Type of trial: parallel, multi-arm, cross-over, etc
 
@@ -95,11 +103,11 @@ format:
 
 - Forced equal allocation
 
-- Vulnerability to selection bias late in trial 
+- Vulnerability to selection bias late in trial
 
 ## Block randomization
 
-- Balanced allocation within blocks 
+- Balanced allocation within blocks
 
 - Protection against temporal trends
 
@@ -116,6 +124,10 @@ format:
   - Clinicaltrials.gov
 
 - Mandatory
+
+- Use SPIRIT for the protocol
+
+  - Perfectly aligns with trial registries
 
 # Learning from mistakes
 
