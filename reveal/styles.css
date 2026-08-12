@@ -1,0 +1,59 @@
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+          text-transform: none;
+        }
+
+.reveal h1  {
+          font-size: 3em !important;
+        }   
+        
+.reveal h2  {
+          font-size: 2.5em !important;
+        }
+
+.reveal p,
+.reveal li {
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+#title-slide p {
+    text-align: left !important;
+}
+
+#title-slide {
+    text-align: left !important;
+}
+
+#title-slide .quarto-title-authors {
+    justify-content: flex-start !important;
+}
+
+#title-slide .quarto-title-author {
+    padding-left: 0 !important;
+}
+
+body {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@media print {
+    .reveal,
+    .reveal-viewport,
+    body {
+        display: none !important;
+    }
+
+    html::before {
+        content: "Exporting this presentation to PDF is prohibited.";
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        color: red;
+    }
+}
