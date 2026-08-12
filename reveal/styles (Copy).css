@@ -32,3 +32,28 @@
     padding-left: 0 !important;
 }
 
+body {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@media print {
+    .reveal,
+    .reveal-viewport,
+    body {
+        display: none !important;
+    }
+
+    html::before {
+        content: "Exporting this presentation to PDF is prohibited.";
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        color: red;
+    }
+}
