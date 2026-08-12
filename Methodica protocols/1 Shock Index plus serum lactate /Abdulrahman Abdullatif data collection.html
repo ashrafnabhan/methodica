@@ -1,0 +1,2495 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polytrauma Data Collection — SI & Lactate Study</title>
+
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        /* ===== CSS CUSTOM PROPERTIES (Design System) ===== */
+        :root {
+            /* Primary palette — calming medical blues (evidence: blue reduces anxiety,
+               Elliot & Maier 2014, Psychol Bull) */
+            --primary-50: #eff6ff;
+            --primary-100: #dbeafe;
+            --primary-200: #bfdbfe;
+            --primary-300: #93c5fd;
+            --primary-400: #60a5fa;
+            --primary-500: #3b82f6;
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-800: #1e40af;
+            --primary-900: #1e3a5f;
+
+            /* Accent — warm teal for positive actions */
+            --accent-500: #14b8a6;
+            --accent-600: #0d9488;
+            --accent-700: #0f766e;
+
+            /* Semantic colours */
+            --success-50: #f0fdf4;
+            --success-500: #22c55e;
+            --success-600: #16a34a;
+            --warning-50: #fffbeb;
+            --warning-500: #f59e0b;
+            --warning-600: #d97706;
+            --danger-50: #fef2f2;
+            --danger-500: #ef4444;
+            --danger-600: #dc2626;
+
+            /* Neutrals */
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+
+            /* Typography */
+            --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+            /* Spacing (8px grid) */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+
+            /* Border radius — rounded corners reduce cognitive load
+               (Bar & Neta 2006, Psychol Sci) */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.25rem;
+            --radius-full: 9999px;
+
+            /* Shadows — subtle depth for hierarchy */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, var(--primary-50) 0%, #f0f4ff 50%, var(--gray-50) 100%);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: var(--space-6) var(--space-4);
+        }
+
+        /* ===== LAYOUT CONTAINER ===== */
+        .app-container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+            padding: var(--space-10) var(--space-8);
+            background: linear-gradient(135deg, var(--primary-800) 0%, var(--primary-900) 100%);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .app-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(96,165,250,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto var(--space-4);
+            background: rgba(255,255,255,0.12);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--primary-200);
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .app-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+            margin-bottom: var(--space-2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-header .subtitle {
+            font-size: 0.8125rem;
+            color: var(--primary-300);
+            font-weight: 400;
+            line-height: 1.5;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-top: var(--space-4);
+            padding: var(--space-1) var(--space-4);
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: var(--radius-full);
+            font-size: 0.6875rem;
+            color: var(--primary-200);
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success-500);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-container {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: var(--space-5) var(--space-6);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            position: sticky;
+            top: var(--space-4);
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .progress-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            letter-spacing: 0.02em;
+        }
+
+        .progress-percentage {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: var(--primary-600);
+            font-family: var(--font-mono);
+        }
+
+        .progress-bar-track {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+            border-radius: var(--radius-full);
+            transition: width var(--transition-slow);
+            width: 0%;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-3);
+            gap: var(--space-1);
+        }
+
+        .progress-step {
+            font-size: 0.625rem;
+            color: var(--gray-400);
+            font-weight: 500;
+            transition: color var(--transition-base);
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+        }
+
+        .progress-step.active {
+            color: var(--primary-600);
+            font-weight: 600;
+        }
+
+        .progress-step.completed {
+            color: var(--accent-600);
+        }
+
+        /* ===== SECTION CARDS ===== */
+        .section-card {
+            background: #ffffff;
+            border-radius: var(--radius-2xl);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            transition: box-shadow var(--transition-base), border-color var(--transition-base);
+        }
+
+        .section-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .section-card.active-section {
+            border-color: var(--primary-300);
+            box-shadow: var(--shadow-lg), 0 0 0 3px rgba(59,130,246,0.08);
+        }
+
+        .section-header {
+            padding: var(--space-5) var(--space-6);
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            cursor: pointer;
+            user-select: none;
+            transition: background var(--transition-fast);
+        }
+
+        .section-header:hover {
+            background: var(--gray-50);
+        }
+
+        .section-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        /* Section colour coding — each section has its own identity colour */
+        .section-screening .section-icon { background: var(--warning-50); }
+        .section-screening .section-icon svg { stroke: var(--warning-600); }
+        .section-screening .section-tag { background: var(--warning-50); color: var(--warning-600); }
+
+        .section-demographics .section-icon { background: #f0fdf4; }
+        .section-demographics .section-icon svg { stroke: #16a34a; }
+        .section-demographics .section-tag { background: #f0fdf4; color: #16a34a; }
+
+        .section-clinical .section-icon { background: #eff6ff; }
+        .section-clinical .section-icon svg { stroke: #2563eb; }
+        .section-clinical .section-tag { background: #eff6ff; color: #2563eb; }
+
+        .section-laboratory .section-icon { background: #faf5ff; }
+        .section-laboratory .section-icon svg { stroke: #9333ea; }
+        .section-laboratory .section-tag { background: #faf5ff; color: #9333ea; }
+
+        .section-indices .section-icon { background: #fff7ed; }
+        .section-indices .section-icon svg { stroke: #ea580c; }
+        .section-indices .section-tag { background: #fff7ed; color: #ea580c; }
+
+        .section-outcomes .section-icon { background: #fef2f2; }
+        .section-outcomes .section-icon svg { stroke: #dc2626; }
+        .section-outcomes .section-tag { background: #fef2f2; color: #dc2626; }
+
+        .section-meta .section-icon { background: var(--gray-100); }
+        .section-meta .section-icon svg { stroke: var(--gray-600); }
+        .section-meta .section-tag { background: var(--gray-100); color: var(--gray-600); }
+
+        .section-title-group {
+            flex: 1;
+        }
+
+        .section-tag {
+            display: inline-block;
+            font-size: 0.625rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-1);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            letter-spacing: -0.01em;
+        }
+
+        .section-chevron {
+            width: 20px;
+            height: 20px;
+            color: var(--gray-400);
+            transition: transform var(--transition-base);
+            flex-shrink: 0;
+        }
+
+        .section-card.open .section-chevron {
+            transform: rotate(180deg);
+        }
+
+        .section-body {
+            padding: 0 var(--space-6) var(--space-6);
+            display: none;
+        }
+
+        .section-card.open .section-body {
+            display: block;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: var(--gray-100);
+            margin: 0 var(--space-6);
+        }
+
+        /* ===== FORM ELEMENTS ===== */
+        .field-group {
+            margin-bottom: var(--space-5);
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+
+        .field-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--space-4);
+        }
+
+        @media (max-width: 640px) {
+            .field-row, .field-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: var(--space-2);
+            line-height: 1.4;
+        }
+
+        .field-label .required {
+            color: var(--danger-500);
+            margin-left: 2px;
+        }
+
+        .field-hint {
+            display: block;
+            font-size: 0.6875rem;
+            color: var(--gray-500);
+            margin-top: var(--space-1);
+            font-weight: 400;
+        }
+
+        .field-unit {
+            font-size: 0.6875rem;
+            color: var(--gray-400);
+            font-weight: 500;
+        }
+
+        /* Text / Number inputs */
+        .input-field {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            font-size: 0.875rem;
+            font-family: var(--font-sans);
+            color: var(--gray-800);
+            background: var(--gray-50);
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            transition: all var(--transition-fast);
+            outline: none;
+            line-height: 1.5;
+        }
+
+        .input-field:hover {
+            border-color: var(--gray-300);
+            background: #ffffff;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-400);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+        }
+
+        .input-field::placeholder {
+            color: var(--gray-400);
+            font-weight: 400;
+        }
+
+        .input-field.computed {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            font-weight: 600;
+            color: var(--primary-700);
+            cursor: default;
+        }
+
+        .input-field.has-value {
+            border-color: var(--accent-500);
+            background: var(--success-50);
+        }
+
+        .input-field.has-error {
+            border-color: var(--danger-500);
+            background: var(--danger-50);
+            box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+        }
+
+        /* Input with unit suffix */
+        .input-with-unit {
+            position: relative;
+        }
+
+        .input-with-unit .input-field {
+            padding-right: 3.5rem;
+        }
+
+        .input-with-unit .unit-label {
+            position: absolute;
+            right: var(--space-4);
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            color: var(--gray-400);
+            font-weight: 500;
+            pointer-events: none;
+        }
+
+        /* Select dropdown */
+        .select-field {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            font-size: 0.875rem;
+            font-family: var(--font-sans);
+            color: var(--gray-800);
+            background: var(--gray-50);
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            transition: all var(--transition-fast);
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.25em 1.25em;
+            padding-right: 2.5rem;
+        }
+
+        .select-field:hover {
+            border-color: var(--gray-300);
+            background-color: #ffffff;
+        }
+
+        .select-field:focus {
+            border-color: var(--primary-400);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+        }
+
+        /* Radio / Checkbox groups */
+        .option-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+
+        .option-group.vertical {
+            flex-direction: column;
+        }
+
+        .option-item {
+            position: relative;
+        }
+
+        .option-item input[type="radio"],
+        .option-item input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            background: var(--gray-50);
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            user-select: none;
+            line-height: 1.4;
+        }
+
+        .option-label:hover {
+            border-color: var(--gray-300);
+            background: #ffffff;
+            color: var(--gray-700);
+        }
+
+        .option-item input:checked + .option-label {
+            background: var(--primary-50);
+            border-color: var(--primary-400);
+            color: var(--primary-700);
+            font-weight: 600;
+        }
+
+        .option-item input:focus-visible + .option-label {
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+        }
+
+        .option-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--gray-300);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all var(--transition-fast);
+        }
+
+        .option-item input[type="checkbox"] + .option-label .option-indicator {
+            border-radius: 4px;
+        }
+
+        .option-item input:checked + .option-label .option-indicator {
+            border-color: var(--primary-500);
+            background: var(--primary-500);
+        }
+
+        .option-item input:checked + .option-label .option-indicator::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ffffff;
+        }
+
+        .option-item input[type="checkbox"]:checked + .option-label .option-indicator::after {
+            width: 8px;
+            height: 8px;
+            border-radius: 1px;
+            background: none;
+            border-left: 2px solid white;
+            border-bottom: 2px solid white;
+            transform: rotate(-45deg);
+            margin-bottom: 2px;
+        }
+
+        /* Conditional fields */
+        .conditional-field {
+            display: none;
+            margin-top: var(--space-3);
+            padding-left: var(--space-4);
+            border-left: 3px solid var(--primary-200);
+            animation: slideDown 0.25s ease-out;
+        }
+
+        .conditional-field.visible {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== COMPUTED VALUES HIGHLIGHT ===== */
+        .computed-card {
+            background: linear-gradient(135deg, var(--primary-50) 0%, #f0f4ff 100%);
+            border: 1.5px solid var(--primary-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-4) var(--space-5);
+            margin-top: var(--space-3);
+        }
+
+        .computed-card .computed-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: var(--primary-600);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: var(--space-1);
+        }
+
+        .computed-card .computed-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-800);
+            font-family: var(--font-mono);
+        }
+
+        .computed-card .computed-status {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: var(--space-1);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+        }
+
+        .computed-card .computed-status.normal {
+            background: var(--success-50);
+            color: var(--success-600);
+        }
+
+        .computed-card .computed-status.elevated {
+            background: var(--danger-50);
+            color: var(--danger-600);
+        }
+
+        /* ===== AIS TABLE ===== */
+        .ais-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-top: var(--space-2);
+        }
+
+        .ais-table th {
+            background: var(--gray-50);
+            padding: var(--space-3) var(--space-4);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .ais-table td {
+            padding: var(--space-2) var(--space-4);
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
+        }
+
+        .ais-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ais-table .region-name {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .ais-table .input-field {
+            padding: var(--space-2) var(--space-3);
+            text-align: center;
+            max-width: 80px;
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .actions-bar {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+            margin-top: var(--space-8);
+            padding: var(--space-6);
+            background: #ffffff;
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-6);
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: var(--font-sans);
+            border: 1.5px solid transparent;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            outline: none;
+            text-decoration: none;
+            line-height: 1.5;
+        }
+
+        .btn:focus-visible {
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: #ffffff;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-700), var(--primary-800));
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-500), var(--accent-600));
+            color: #ffffff;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, var(--accent-600), var(--accent-700));
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: #ffffff;
+            color: var(--gray-700);
+            border-color: var(--gray-300);
+        }
+
+        .btn-outline:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .btn-danger {
+            background: #ffffff;
+            color: var(--danger-600);
+            border-color: var(--danger-500);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-50);
+        }
+
+        .btn-full {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast-container {
+            position: fixed;
+            bottom: var(--space-6);
+            right: var(--space-6);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-4) var(--space-5);
+            background: var(--gray-900);
+            color: #ffffff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            animation: toastIn 0.35s ease-out, toastOut 0.3s ease-in forwards;
+            animation-delay: 0s, 3s;
+            max-width: 380px;
+        }
+
+        .toast.toast-success { border-left: 4px solid var(--success-500); }
+        .toast.toast-error { border-left: 4px solid var(--danger-500); }
+        .toast.toast-warning { border-left: 4px solid var(--warning-500); }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(40px); }
+        }
+
+        /* ===== RECORD COUNTER ===== */
+        .record-counter {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-5);
+            background: var(--accent-500);
+            color: #ffffff;
+            border-radius: var(--radius-full);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            position: fixed;
+            bottom: var(--space-6);
+            left: var(--space-6);
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .record-counter .count {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        /* ===== FOOTER ===== */
+        .app-footer {
+            text-align: center;
+            padding: var(--space-8) var(--space-4);
+            margin-top: var(--space-8);
+            color: var(--gray-400);
+            font-size: 0.75rem;
+        }
+
+        /* ===== VALIDATION MESSAGES ===== */
+        .validation-msg {
+            font-size: 0.6875rem;
+            margin-top: var(--space-1);
+            display: none;
+        }
+
+        .validation-msg.error {
+            color: var(--danger-500);
+            display: block;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            body {
+                padding: var(--space-3) var(--space-2);
+            }
+
+            .app-header {
+                padding: var(--space-6) var(--space-4);
+            }
+
+            .app-header h1 {
+                font-size: 1.125rem;
+            }
+
+            .section-header {
+                padding: var(--space-4);
+            }
+
+            .section-body {
+                padding: 0 var(--space-4) var(--space-4);
+            }
+
+            .actions-bar {
+                flex-direction: column;
+                padding: var(--space-4);
+            }
+
+            .btn-full {
+                width: 100%;
+            }
+
+            .record-counter {
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: var(--space-3);
+            }
+
+            .progress-steps {
+                display: none;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body { background: white; padding: 0; }
+            .progress-container, .actions-bar, .record-counter, .toast-container { display: none !important; }
+            .section-card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+            .section-card .section-body { display: block !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- ===== HEADER ===== -->
+    <header class="app-header">
+        <div class="header-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h1>Polytrauma Research Data Collection</h1>
+        <p class="subtitle">Correlation of Shock Index &amp; Serum Lactate as Predictors of In-Hospital Mortality — Retrospective Cohort Study, Al-Demerdash Hospital, Ain Shams University</p>
+        <span class="header-badge"><span class="dot"></span> STROBE-Compliant · REDCap-Style Digital CRF</span>
+    </header>
+
+    <!-- ===== PROGRESS BAR ===== -->
+    <div class="progress-container">
+        <div class="progress-header">
+            <span class="progress-label">Form Completion</span>
+            <span class="progress-percentage" id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+        <div class="progress-steps">
+            <span class="progress-step" data-section="screening">Screening</span>
+            <span class="progress-step" data-section="demographics">Demographics</span>
+            <span class="progress-step" data-section="clinical">Clinical</span>
+            <span class="progress-step" data-section="laboratory">Laboratory</span>
+            <span class="progress-step" data-section="indices">Indices</span>
+            <span class="progress-step" data-section="outcomes">Outcomes</span>
+            <span class="progress-step" data-section="meta">Verification</span>
+        </div>
+    </div>
+
+    <!-- ===== FORM ===== -->
+    <form id="dataCollectionForm" novalidate>
+
+        <!-- ────── SECTION 0: SCREENING ────── -->
+        <div class="section-card open section-screening" data-section="screening" id="sectionScreening">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                </div>
+                <div class="section-title-group">
+                    <span class="section-tag">Pre-Screening</span>
+                    <div class="section-title">Eligibility Screening</div>
+                </div>
+                <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-divider"></div>
+            <div class="section-body">
+                <div class="field-group">
+                    <label class="field-label">Patient Code <span class="required">*</span>
+                        <span class="field-hint">Unique coded identifier — NO patient names or identifiable data</span>
+                    </label>
+                    <input type="text" class="input-field" id="patientCode" name="patientCode" placeholder="e.g., PT-001" required autocomplete="off">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Eligibility Status <span class="required">*</span></label>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="radio" name="eligibility" id="eligYes" value="Eligible" onchange="handleEligibility()">
+                            <label class="option-label" for="eligYes"><span class="option-indicator"></span> Eligible — Proceed to data collection</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="eligibility" id="eligNo" value="Ineligible" onchange="handleEligibility()">
+                            <label class="option-label" for="eligNo"><span class="option-indicator"></span> Ineligible</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="conditional-field" id="exclusionReasonField">
+                    <div class="field-group">
+                        <label class="field-label">Reason for Exclusion <span class="required">*</span></label>
+                        <select class="select-field" id="exclusionReason" name="exclusionReason">
+                            <option value="">Select reason...</option>
+                            <option value="Age < 18">Age &lt; 18 years</option>
+                            <option value="Pregnant">Pregnant</option>
+                            <option value="Transfer">Transferred from another facility</option>
+                            <option value="DOA">Dead on arrival / immediate death before assessment</option>
+                            <option value="Missing core data">Missing core data (HR, SBP, Lactate, or outcome)</option>
+                            <option value="ISS ≤ 15">ISS ≤ 15</option>
+                            <option value="Lactate > 6hrs">Lactate drawn &gt; 6 hours from admission</option>
+                            <option value="Hepatic cirrhosis">Documented hepatic cirrhosis</option>
+                            <option value="ESRD on dialysis">End-stage renal disease on dialysis</option>
+                            <option value="Active sepsis">Active sepsis at presentation (Sepsis-3)</option>
+                            <option value="DKA">Diabetic ketoacidosis</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="conditional-field" id="exclusionOtherField">
+                        <div class="field-group">
+                            <label class="field-label">Specify other reason</label>
+                            <input type="text" class="input-field" id="exclusionOther" name="exclusionOther" placeholder="Describe...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ────── SECTION A: DEMOGRAPHICS ────── -->
+        <div class="section-card section-demographics" data-section="demographics" id="sectionDemographics">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div class="section-title-group">
+                    <span class="section-tag">Section A</span>
+                    <div class="section-title">Demographics &amp; Injury Characteristics</div>
+                </div>
+                <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-divider"></div>
+            <div class="section-body">
+                <div class="field-row">
+                    <div class="field-group">
+                        <label class="field-label">Age <span class="required">*</span> <span class="field-unit">(years)</span></label>
+                        <div class="input-with-unit">
+                            <input type="number" class="input-field" id="age" name="age" min="18" max="120" placeholder="e.g., 35" required>
+                            <span class="unit-label">yrs</span>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Sex <span class="required">*</span></label>
+                        <div class="option-group">
+                            <div class="option-item">
+                                <input type="radio" name="sex" id="sexMale" value="Male">
+                                <label class="option-label" for="sexMale"><span class="option-indicator"></span> Male</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" name="sex" id="sexFemale" value="Female">
+                                <label class="option-label" for="sexFemale"><span class="option-indicator"></span> Female</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Known Comorbidities <span class="field-hint">(as documented in the medical record — check all that apply)</span></label>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="checkbox" name="comorbid" id="comorbNone" value="None documented" onchange="handleComorbidNone()">
+                            <label class="option-label" for="comorbNone"><span class="option-indicator"></span> None documented</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="comorbid" id="comorbDM" value="Diabetes mellitus" class="comorbid-item">
+                            <label class="option-label" for="comorbDM"><span class="option-indicator"></span> Diabetes mellitus</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="comorbid" id="comorbHTN" value="Hypertension" class="comorbid-item">
+                            <label class="option-label" for="comorbHTN"><span class="option-indicator"></span> Hypertension</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="comorbid" id="comorbCardiac" value="Cardiac disease" class="comorbid-item">
+                            <label class="option-label" for="comorbCardiac"><span class="option-indicator"></span> Cardiac disease</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="comorbid" id="comorbOther" value="Other" class="comorbid-item" onchange="toggleConditional('comorbOtherField', this.checked)">
+                            <label class="option-label" for="comorbOther"><span class="option-indicator"></span> Other</label>
+                        </div>
+                    </div>
+                    <div class="conditional-field" id="comorbOtherField">
+                        <input type="text" class="input-field" id="comorbOtherText" name="comorbOtherText" placeholder="Specify other comorbidity...">
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Documented Beta-blocker Use <span class="required">*</span></label>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="radio" name="betaBlocker" id="bbYes" value="Yes">
+                            <label class="option-label" for="bbYes"><span class="option-indicator"></span> Yes</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="betaBlocker" id="bbNo" value="No">
+                            <label class="option-label" for="bbNo"><span class="option-indicator"></span> No</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="betaBlocker" id="bbND" value="Not documented">
+                            <label class="option-label" for="bbND"><span class="option-indicator"></span> Not documented</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label class="field-label">Mechanism of Injury <span class="required">*</span></label>
+                        <select class="select-field" id="mechanism" name="mechanism" onchange="handleMechanismOther()">
+                            <option value="">Select...</option>
+                            <option value="RTA">Road Traffic Accident (RTA)</option>
+                            <option value="Fall from height">Fall from height</option>
+                            <option value="Assault">Assault</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="conditional-field" id="mechanismOtherField">
+                            <input type="text" class="input-field" id="mechanismOther" name="mechanismOther" placeholder="Specify mechanism...">
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Type of Trauma <span class="required">*</span></label>
+                        <div class="option-group">
+                            <div class="option-item">
+                                <input type="radio" name="traumaType" id="traumaBlunt" value="Blunt">
+                                <label class="option-label" for="traumaBlunt"><span class="option-indicator"></span> Blunt</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" name="traumaType" id="traumaPen" value="Penetrating">
+                                <label class="option-label" for="traumaPen"><span class="option-indicator"></span> Penetrating</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ────── SECTION B: PRE-HOSPITAL & CLINICAL ────── -->
+        <div class="section-card section-clinical" data-section="clinical" id="sectionClinical">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+                <div class="section-title-group">
+                    <span class="section-tag">Section B</span>
+                    <div class="section-title">Pre-hospital Care &amp; Clinical Parameters at Admission</div>
+                </div>
+                <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-divider"></div>
+            <div class="section-body">
+                <div class="field-group">
+                    <label class="field-label">Documented Pre-hospital Care</label>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="checkbox" name="prehospital" id="phIV" value="IV fluids administered">
+                            <label class="option-label" for="phIV"><span class="option-indicator"></span> IV fluids administered</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="prehospital" id="phTourniquet" value="Tourniquet applied">
+                            <label class="option-label" for="phTourniquet"><span class="option-indicator"></span> Tourniquet applied</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="prehospital" id="phNone" value="None documented">
+                            <label class="option-label" for="phNone"><span class="option-indicator"></span> None documented</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="prehospital" id="phUnknown" value="Unknown">
+                            <label class="option-label" for="phUnknown"><span class="option-indicator"></span> Unknown</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Time of ED Admission <span class="required">*</span> <span class="field-hint">(from triage sheet)</span></label>
+                    <input type="time" class="input-field" id="edAdmissionTime" name="edAdmissionTime" required style="max-width:200px;">
+                </div>
+
+                <div class="field-row-3">
+                    <div class="field-group">
+                        <label class="field-label">Initial Heart Rate <span class="required">*</span> <span class="field-unit">(bpm)</span></label>
+                        <div class="input-with-unit">
+                            <input type="number" class="input-field" id="heartRate" name="heartRate" min="30" max="250" placeholder="e.g., 110" required oninput="computeShockIndex()">
+                            <span class="unit-label">bpm</span>
+                        </div>
+                        <span class="validation-msg" id="hrValidation"></span>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Initial SBP <span class="required">*</span> <span class="field-unit">(mmHg)</span></label>
+                        <div class="input-with-unit">
+                            <input type="number" class="input-field" id="sbp" name="sbp" min="30" max="300" placeholder="e.g., 90" required oninput="computeShockIndex()">
+                            <span class="unit-label">mmHg</span>
+                        </div>
+                        <span class="validation-msg" id="sbpValidation"></span>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">GCS Total <span class="required">*</span> <span class="field-unit">(/15)</span></label>
+                        <div class="input-with-unit">
+                            <input type="number" class="input-field" id="gcsTotal" name="gcsTotal" min="3" max="15" placeholder="3–15" required>
+                            <span class="unit-label">/15</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-row-3">
+                    <div class="field-group">
+                        <label class="field-label">GCS — Eye <span class="field-unit">(E)</span></label>
+                        <select class="select-field" id="gcsEye" name="gcsEye">
+                            <option value="">—</option>
+                            <option value="1">1 – No response</option>
+                            <option value="2">2 – To pressure</option>
+                            <option value="3">3 – To voice</option>
+                            <option value="4">4 – Spontaneous</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">GCS — Verbal <span class="field-unit">(V)</span></label>
+                        <select class="select-field" id="gcsVerbal" name="gcsVerbal">
+                            <option value="">—</option>
+                            <option value="1">1 – No response</option>
+                            <option value="2">2 – Incomprehensible</option>
+                            <option value="3">3 – Inappropriate</option>
+                            <option value="4">4 – Confused</option>
+                            <option value="5">5 – Oriented</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">GCS — Motor <span class="field-unit">(M)</span></label>
+                        <select class="select-field" id="gcsMotor" name="gcsMotor">
+                            <option value="">—</option>
+                            <option value="1">1 – No response</option>
+                            <option value="2">2 – Extension</option>
+                            <option value="3">3 – Abnormal flexion</option>
+                            <option value="4">4 – Withdrawal</option>
+                            <option value="5">5 – Localizing</option>
+                            <option value="6">6 – Obeys commands</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ────── SECTION C: LABORATORY ────── -->
+        <div class="section-card section-laboratory" data-section="laboratory" id="sectionLaboratory">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><path d="M14.5 2v6.5L18 14a4 4 0 11-8 0l3.5-5.5V2"/><path d="M9 2h6"/><path d="M8 14h8"/></svg>
+                </div>
+                <div class="section-title-group">
+                    <span class="section-tag">Section C</span>
+                    <div class="section-title">Laboratory Parameters</div>
+                </div>
+                <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-divider"></div>
+            <div class="section-body">
+                <div class="field-row">
+                    <div class="field-group">
+                        <label class="field-label">Serum Lactate <span class="required">*</span> <span class="field-unit">(mmol/L)</span></label>
+                        <div class="input-with-unit">
+                            <input type="number" class="input-field" id="lactate" name="lactate" min="0" max="30" step="0.1" placeholder="e.g., 4.2" required oninput="computeLactateStatus()">
+                            <span class="unit-label">mmol/L</span>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Initial Hemoglobin <span class="field-unit">(g/dL)</span></label>
+                        <div class="input-with-unit">
+                            <input type="number" class="input-field" id="hemoglobin" name="hemoglobin" min="1" max="25" step="0.1" placeholder="e.g., 10.5">
+                            <span class="unit-label">g/dL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label class="field-label">Time of Lactate Blood Draw <span class="required">*</span> <span class="field-hint">(from lab report timestamp)</span></label>
+                        <input type="time" class="input-field" id="lactateTime" name="lactateTime" required style="max-width:200px;" oninput="computeLactateInterval()">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Calculated Time to Lactate Sampling</label>
+                        <div class="computed-card">
+                            <div class="computed-label">Auto-calculated</div>
+                            <div class="computed-value" id="lactateIntervalDisplay">— hrs</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Source of Lactate Sample</label>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="radio" name="lactateSource" id="lsABG" value="Arterial blood gas">
+                            <label class="option-label" for="lsABG"><span class="option-indicator"></span> Arterial blood gas</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="lactateSource" id="lsVBG" value="Venous blood gas">
+                            <label class="option-label" for="lsVBG"><span class="option-indicator"></span> Venous blood gas</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="lactateSource" id="lsND" value="Not documented">
+                            <label class="option-label" for="lsND"><span class="option-indicator"></span> Not documented</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lactate status indicator -->
+                <div class="conditional-field visible" id="lactateStatusCard" style="display:none;">
+                    <div class="computed-card">
+                        <div class="computed-label">Lactate Status</div>
+                        <div class="computed-value" id="lactateStatusValue">—</div>
+                        <span class="computed-status" id="lactateStatusBadge"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ────── SECTION D: CALCULATED INDICES ────── -->
+        <div class="section-card section-indices" data-section="indices" id="sectionIndices">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                </div>
+                <div class="section-title-group">
+                    <span class="section-tag">Section D</span>
+                    <div class="section-title">Calculated Indices (Auto-computed)</div>
+                </div>
+                <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-divider"></div>
+            <div class="section-body">
+
+                <!-- Shock Index -->
+                <div class="field-row">
+                    <div class="field-group">
+                        <label class="field-label">Shock Index (SI) = HR ÷ SBP</label>
+                        <div class="computed-card">
+                            <div class="computed-label">Auto-calculated from Section B</div>
+                            <div class="computed-value" id="shockIndexDisplay">—</div>
+                            <span class="computed-status" id="shockIndexBadge"></span>
+                        </div>
+                        <input type="hidden" id="shockIndex" name="shockIndex">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">SI Classification</label>
+                        <div class="computed-card">
+                            <div class="computed-label">Clinical interpretation</div>
+                            <div class="computed-value" id="siClassDisplay" style="font-size:1rem;">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ISS -->
+                <div class="field-group" style="margin-top:var(--space-5);">
+                    <label class="field-label">Injury Severity Score (ISS) <span class="required">*</span>
+                        <span class="field-hint">AIS Body Regions Scored — using AIS 2005 Update dictionary (0–6 per region)</span>
+                    </label>
+                    <table class="ais-table">
+                        <thead>
+                            <tr><th>Body Region</th><th style="width:100px;text-align:center;">AIS Score</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="region-name">Head / Neck</td><td><input type="number" class="input-field" id="aisHead" name="aisHead" min="0" max="6" placeholder="0–6" oninput="computeISS()"></td></tr>
+                            <tr><td class="region-name">Face</td><td><input type="number" class="input-field" id="aisFace" name="aisFace" min="0" max="6" placeholder="0–6" oninput="computeISS()"></td></tr>
+                            <tr><td class="region-name">Chest</td><td><input type="number" class="input-field" id="aisChest" name="aisChest" min="0" max="6" placeholder="0–6" oninput="computeISS()"></td></tr>
+                            <tr><td class="region-name">Abdomen</td><td><input type="number" class="input-field" id="aisAbdomen" name="aisAbdomen" min="0" max="6" placeholder="0–6" oninput="computeISS()"></td></tr>
+                            <tr><td class="region-name">Extremities / Pelvis</td><td><input type="number" class="input-field" id="aisExtremity" name="aisExtremity" min="0" max="6" placeholder="0–6" oninput="computeISS()"></td></tr>
+                            <tr><td class="region-name">External</td><td><input type="number" class="input-field" id="aisExternal" name="aisExternal" min="0" max="6" placeholder="0–6" oninput="computeISS()"></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label class="field-label">Calculated ISS</label>
+                        <div class="computed-card">
+                            <div class="computed-label">Sum of squares of top 3 regions</div>
+                            <div class="computed-value" id="issDisplay">—</div>
+                            <span class="computed-status" id="issBadge"></span>
+                        </div>
+                        <input type="hidden" id="issScore" name="issScore">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Top 3 Regions Used</label>
+                        <div class="computed-card">
+                            <div class="computed-label">Auto-detected</div>
+                            <div class="computed-value" id="issRegionsDisplay" style="font-size:0.8125rem;font-weight:500;">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">ISS calculated based on <span class="field-hint">(check all sources used)</span></label>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="checkbox" name="issSources" id="issED" value="ED notes">
+                            <label class="option-label" for="issED"><span class="option-indicator"></span> ED notes</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="issSources" id="issCT" value="CT reports">
+                            <label class="option-label" for="issCT"><span class="option-indicator"></span> CT reports</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="issSources" id="issOp" value="Operative notes">
+                            <label class="option-label" for="issOp"><span class="option-indicator"></span> Operative notes</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" name="issSources" id="issDC" value="Discharge summary">
+                            <label class="option-label" for="issDC"><span class="option-indicator"></span> Discharge summary</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ────── SECTION E: OUTCOMES ────── -->
+        <div class="section-card section-outcomes" data-section="outcomes" id="sectionOutcomes">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 8v4l3 3"/></svg>
+                </div>
+                <div class="section-title-group">
+                    <span class="section-tag">Section E</span>
+                    <div class="section-title">Outcomes</div>
+                </div>
+                <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-divider"></div>
+            <div class="section-body">
+
+                <!-- Primary Outcome -->
+                <div style="margin-bottom: var(--space-4); padding-bottom: var(--space-4); border-bottom: 1px solid var(--gray-100);">
+                    <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--danger-600);margin-bottom:var(--space-3);">Primary Outcome</div>
+
+                    <div class="field-group">
+                        <label class="field-label">In-Hospital Mortality <span class="required">*</span></label>
+                        <div class="option-group">
+                            <div class="option-item">
+                                <input type="radio" name="mortality" id="mortAlive" value="Alive at discharge" onchange="handleMortality()">
+                                <label class="option-label" for="mortAlive"><span class="option-indicator"></span> Alive at discharge</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" name="mortality" id="mortDead" value="Dead" onchange="handleMortality()">
+                                <label class="option-label" for="mortDead"><span class="option-indicator"></span> Dead</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="conditional-field" id="deathDetailsField">
+                        <div class="field-row">
+                            <div class="field-group">
+                                <label class="field-label">Day of Death <span class="field-unit">(day of admission)</span></label>
+                                <div class="input-with-unit">
+                                    <input type="number" class="input-field" id="deathDay" name="deathDay" min="0" max="365" placeholder="e.g., 3">
+                                    <span class="unit-label">Day</span>
+                                </div>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">Cause of Death <span class="field-hint">(if documented)</span></label>
+                                <input type="text" class="input-field" id="causeOfDeath" name="causeOfDeath" placeholder="e.g., hemorrhagic shock">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary Outcomes -->
+                <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--gray-500);margin-bottom:var(--space-3);">Secondary Outcomes</div>
+
+                <div class="field-group">
+                    <label class="field-label">Urgent Surgical Intervention within 24 hours <span class="required">*</span></label>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="radio" name="urgentSurgery" id="surgYes" value="Yes" onchange="toggleConditional('surgeryDetailsField', true)">
+                            <label class="option-label" for="surgYes"><span class="option-indicator"></span> Yes</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="urgentSurgery" id="surgNo" value="No" onchange="toggleConditional('surgeryDetailsField', false)">
+                            <label class="option-label" for="surgNo"><span class="option-indicator"></span> No</label>
+                        </div>
+                    </div>
+                    <div class="conditional-field" id="surgeryDetailsField">
+                        <div class="field-group">
+                            <label class="field-label">Type of Surgery</label>
+                            <input type="text" class="input-field" id="surgeryType" name="surgeryType" placeholder="e.g., Emergency laparotomy">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Blood Transfusion within 24 hours <span class="required">*</span></label>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="radio" name="transfusion" id="transYes" value="Yes" onchange="toggleConditional('transfusionDetailsField', true)">
+                            <label class="option-label" for="transYes"><span class="option-indicator"></span> Yes</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="transfusion" id="transNo" value="No" onchange="toggleConditional('transfusionDetailsField', false)">
+                            <label class="option-label" for="transNo"><span class="option-indicator"></span> No</label>
+                        </div>
+                    </div>
+                    <div class="conditional-field" id="transfusionDetailsField">
+                        <div class="field-group">
+                            <label class="field-label">Number of pRBC Units</label>
+                            <div class="input-with-unit">
+                                <input type="number" class="input-field" id="prbcUnits" name="prbcUnits" min="0" max="50" placeholder="e.g., 4">
+                                <span class="unit-label">units</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">ICU Admission <span class="required">*</span></label>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="radio" name="icuAdmit" id="icuYes" value="Yes" onchange="toggleConditional('icuLosField', true)">
+                            <label class="option-label" for="icuYes"><span class="option-indicator"></span> Yes</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="icuAdmit" id="icuNo" value="No" onchange="toggleConditional('icuLosField', false)">
+                            <label class="option-label" for="icuNo"><span class="option-indicator"></span> No</label>
+                        </div>
+                    </div>
+                    <div class="conditional-field" id="icuLosField">
+                        <div class="field-group">
+                            <label class="field-label">ICU Length of Stay <span class="field-unit">(days)</span></label>
+                            <div class="input-with-unit">
+                                <input type="number" class="input-field" id="icuLOS" name="icuLOS" min="0" max="365" placeholder="e.g., 5">
+                                <span class="unit-label">days</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Total Hospital Length of Stay <span class="field-unit">(days)</span></label>
+                    <div class="input-with-unit">
+                        <input type="number" class="input-field" id="hospitalLOS" name="hospitalLOS" min="0" max="365" placeholder="e.g., 12">
+                        <span class="unit-label">days</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ────── SECTION F: VERIFICATION / META ────── -->
+        <div class="section-card section-meta" data-section="meta" id="sectionMeta">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <div class="section-title-group">
+                    <span class="section-tag">Verification</span>
+                    <div class="section-title">Data Collector &amp; Verification</div>
+                </div>
+                <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-divider"></div>
+            <div class="section-body">
+                <div class="field-row">
+                    <div class="field-group">
+                        <label class="field-label">Data Collected By <span class="required">*</span></label>
+                        <input type="text" class="input-field" id="collectorName" name="collectorName" placeholder="Collector name" required>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Date of Collection <span class="required">*</span></label>
+                        <input type="date" class="input-field" id="collectionDate" name="collectionDate" required>
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="field-group">
+                        <label class="field-label">Verified By</label>
+                        <input type="text" class="input-field" id="verifierName" name="verifierName" placeholder="Verifier name">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Date of Verification</label>
+                        <input type="date" class="input-field" id="verificationDate" name="verificationDate">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <!-- ===== ACTION BUTTONS ===== -->
+    <div class="actions-bar">
+        <button type="button" class="btn btn-success btn-full" onclick="saveRecord()">
+            <svg viewBox="0 0 24 24" stroke="currentColor"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save Record &amp; Add New
+        </button>
+        <button type="button" class="btn btn-primary btn-full" onclick="exportToExcel()">
+            <svg viewBox="0 0 24 24" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+            Export All to Excel
+        </button>
+        <button type="button" class="btn btn-outline btn-full" onclick="viewRecords()">
+            <svg viewBox="0 0 24 24" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            View Records (<span id="viewCount">0</span>)
+        </button>
+        <button type="button" class="btn btn-danger" onclick="clearForm()">
+            <svg viewBox="0 0 24 24" stroke="currentColor"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            Clear
+        </button>
+    </div>
+
+    <!-- ===== RECORDS TABLE (hidden by default) ===== -->
+    <div id="recordsTableContainer" style="display:none; margin-top: var(--space-6);">
+        <div class="section-card section-meta" style="overflow-x:auto;">
+            <div class="section-header" style="cursor:default;">
+                <div class="section-icon">
+                    <svg viewBox="0 0 24 24" stroke="var(--gray-600)" fill="none" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                </div>
+                <div class="section-title-group">
+                    <span class="section-tag">Database</span>
+                    <div class="section-title">Saved Records</div>
+                </div>
+            </div>
+            <div class="section-divider"></div>
+            <div style="padding: var(--space-4) var(--space-6) var(--space-6); overflow-x: auto;">
+                <table id="recordsTable" class="ais-table" style="min-width:800px;">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Patient Code</th>
+                            <th>Age</th>
+                            <th>Sex</th>
+                            <th>Mechanism</th>
+                            <th>HR</th>
+                            <th>SBP</th>
+                            <th>SI</th>
+                            <th>Lactate</th>
+                            <th>GCS</th>
+                            <th>ISS</th>
+                            <th>Mortality</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Polytrauma Research Data Collection Tool — Ain Shams University, Faculty of Medicine</p>
+        <p style="margin-top:var(--space-1);">STROBE-Compliant · Confidential Research Instrument · v1.0</p>
+    </footer>
+</div>
+
+<!-- ===== RECORD COUNTER (floating) ===== -->
+<div class="record-counter" id="recordCounter" style="display:none;">
+    <svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    Records: <span class="count" id="recordCountValue">0</span>
+</div>
+
+<!-- ===== TOAST CONTAINER ===== -->
+<div class="toast-container" id="toastContainer"></div>
+
+
+<script>
+    // ===================================================================
+    //  DATA STORE
+    // ===================================================================
+    let allRecords = [];
+
+    // Load from localStorage on init
+    (function init() {
+        const stored = localStorage.getItem('polytraumaRecords');
+        if (stored) {
+            try { allRecords = JSON.parse(stored); } catch(e) { allRecords = []; }
+        }
+        updateRecordCounter();
+        updateProgress();
+        // Auto-set collection date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('collectionDate').value = today;
+    })();
+
+    // ===================================================================
+    //  SECTION TOGGLE (Accordion)
+    // ===================================================================
+    function toggleSection(headerEl) {
+        const card = headerEl.closest('.section-card');
+        card.classList.toggle('open');
+    }
+
+    // ===================================================================
+    //  ELIGIBILITY HANDLER
+    // ===================================================================
+    function handleEligibility() {
+        const eligible = document.getElementById('eligYes').checked;
+        const ineligible = document.getElementById('eligNo').checked;
+        const exclusionField = document.getElementById('exclusionReasonField');
+
+        if (ineligible) {
+            exclusionField.classList.add('visible');
+        } else {
+            exclusionField.classList.remove('visible');
+        }
+    }
+
+    // Watch exclusion reason for "Other"
+    document.getElementById('exclusionReason').addEventListener('change', function() {
+        const otherField = document.getElementById('exclusionOtherField');
+        if (this.value === 'Other') {
+            otherField.classList.add('visible');
+        } else {
+            otherField.classList.remove('visible');
+        }
+    });
+
+    // ===================================================================
+    //  COMORBIDITY HANDLER — "None" unchecks others
+    // ===================================================================
+    function handleComorbidNone() {
+        const none = document.getElementById('comorbNone');
+        if (none.checked) {
+            document.querySelectorAll('.comorbid-item').forEach(cb => { cb.checked = false; });
+            toggleConditional('comorbOtherField', false);
+        }
+    }
+    document.querySelectorAll('.comorbid-item').forEach(cb => {
+        cb.addEventListener('change', function() {
+            if (this.checked) document.getElementById('comorbNone').checked = false;
+        });
+    });
+
+    // ===================================================================
+    //  MECHANISM OTHER
+    // ===================================================================
+    function handleMechanismOther() {
+        const val = document.getElementById('mechanism').value;
+        const field = document.getElementById('mechanismOtherField');
+        if (val === 'Other') {
+            field.classList.add('visible');
+        } else {
+            field.classList.remove('visible');
+        }
+    }
+
+    // ===================================================================
+    //  MORTALITY HANDLER
+    // ===================================================================
+    function handleMortality() {
+        const dead = document.getElementById('mortDead').checked;
+        const field = document.getElementById('deathDetailsField');
+        if (dead) {
+            field.classList.add('visible');
+        } else {
+            field.classList.remove('visible');
+        }
+    }
+
+    // ===================================================================
+    //  CONDITIONAL FIELD TOGGLE
+    // ===================================================================
+    function toggleConditional(fieldId, show) {
+        const field = document.getElementById(fieldId);
+        if (show) {
+            field.classList.add('visible');
+        } else {
+            field.classList.remove('visible');
+        }
+    }
+
+    // ===================================================================
+    //  AUTO-COMPUTE: SHOCK INDEX
+    // ===================================================================
+    function computeShockIndex() {
+        const hr = parseFloat(document.getElementById('heartRate').value);
+        const sbp = parseFloat(document.getElementById('sbp').value);
+        const display = document.getElementById('shockIndexDisplay');
+        const badge = document.getElementById('shockIndexBadge');
+        const classDisplay = document.getElementById('siClassDisplay');
+        const hidden = document.getElementById('shockIndex');
+
+        if (hr && sbp && sbp > 0) {
+            const si = (hr / sbp).toFixed(2);
+            display.textContent = si;
+            hidden.value = si;
+
+            if (si >= 0.9) {
+                badge.textContent = '⚠ Elevated (≥ 0.9)';
+                badge.className = 'computed-status elevated';
+                classDisplay.textContent = 'Elevated — Associated with increased mortality risk';
+                classDisplay.style.color = 'var(--danger-600)';
+            } else if (si >= 0.7) {
+                badge.textContent = 'Borderline (0.7–0.9)';
+                badge.className = 'computed-status';
+                badge.style.background = 'var(--warning-50)';
+                badge.style.color = 'var(--warning-600)';
+                classDisplay.textContent = 'Borderline — Monitor closely';
+                classDisplay.style.color = 'var(--warning-600)';
+            } else {
+                badge.textContent = '✓ Normal (< 0.7)';
+                badge.className = 'computed-status normal';
+                classDisplay.textContent = 'Normal range';
+                classDisplay.style.color = 'var(--success-600)';
+            }
+        } else {
+            display.textContent = '—';
+            badge.textContent = '';
+            badge.className = 'computed-status';
+            classDisplay.textContent = '—';
+            hidden.value = '';
+        }
+        updateProgress();
+    }
+
+    // ===================================================================
+    //  AUTO-COMPUTE: LACTATE STATUS
+    // ===================================================================
+    function computeLactateStatus() {
+        const lactate = parseFloat(document.getElementById('lactate').value);
+        const card = document.getElementById('lactateStatusCard');
+        const value = document.getElementById('lactateStatusValue');
+        const badge = document.getElementById('lactateStatusBadge');
+
+        if (lactate >= 0) {
+            card.style.display = 'block';
+            value.textContent = lactate.toFixed(1) + ' mmol/L';
+
+            if (lactate >= 4) {
+                badge.textContent = '⚠ Elevated (≥ 4 mmol/L) — High mortality risk';
+                badge.className = 'computed-status elevated';
+            } else if (lactate >= 2) {
+                badge.textContent = 'Mildly Elevated (2–4 mmol/L)';
+                badge.className = 'computed-status';
+                badge.style.background = 'var(--warning-50)';
+                badge.style.color = 'var(--warning-600)';
+            } else {
+                badge.textContent = '✓ Normal (< 2 mmol/L)';
+                badge.className = 'computed-status normal';
+            }
+        } else {
+            card.style.display = 'none';
+        }
+        updateProgress();
+    }
+
+    // ===================================================================
+    //  AUTO-COMPUTE: LACTATE INTERVAL
+    // ===================================================================
+    function computeLactateInterval() {
+        const admTime = document.getElementById('edAdmissionTime').value;
+        const lacTime = document.getElementById('lactateTime').value;
+        const display = document.getElementById('lactateIntervalDisplay');
+
+        if (admTime && lacTime) {
+            const [aH, aM] = admTime.split(':').map(Number);
+            const [lH, lM] = lacTime.split(':').map(Number);
+            let diffMin = (lH * 60 + lM) - (aH * 60 + aM);
+            if (diffMin < 0) diffMin += 1440; // next day
+            const hrs = (diffMin / 60).toFixed(1);
+            display.textContent = hrs + ' hrs';
+
+            if (diffMin / 60 > 6) {
+                display.style.color = 'var(--danger-600)';
+                display.textContent = hrs + ' hrs ⚠ > 6h';
+            } else {
+                display.style.color = 'var(--primary-800)';
+            }
+        } else {
+            display.textContent = '— hrs';
+        }
+    }
+
+    // Also trigger on admission time change
+    document.getElementById('edAdmissionTime').addEventListener('input', computeLactateInterval);
+
+    // ===================================================================
+    //  AUTO-COMPUTE: ISS
+    // ===================================================================
+    function computeISS() {
+        const regions = [
+            { name: 'Head/Neck', val: parseInt(document.getElementById('aisHead').value) || 0 },
+            { name: 'Face', val: parseInt(document.getElementById('aisFace').value) || 0 },
+            { name: 'Chest', val: parseInt(document.getElementById('aisChest').value) || 0 },
+            { name: 'Abdomen', val: parseInt(document.getElementById('aisAbdomen').value) || 0 },
+            { name: 'Extremities', val: parseInt(document.getElementById('aisExtremity').value) || 0 },
+            { name: 'External', val: parseInt(document.getElementById('aisExternal').value) || 0 }
+        ];
+
+        // Check for AIS 6 (unsurvivable) — ISS = 75 automatically
+        const hasAIS6 = regions.some(r => r.val === 6);
+
+        // Sort descending
+        const sorted = [...regions].sort((a, b) => b.val - a.val);
+        const top3 = sorted.slice(0, 3);
+
+        let iss;
+        if (hasAIS6) {
+            iss = 75;
+        } else {
+            iss = top3.reduce((sum, r) => sum + r.val * r.val, 0);
+        }
+
+        const display = document.getElementById('issDisplay');
+        const badge = document.getElementById('issBadge');
+        const regionsDisplay = document.getElementById('issRegionsDisplay');
+        const hidden = document.getElementById('issScore');
+
+        const anyFilled = regions.some(r => r.val > 0);
+        if (anyFilled) {
+            display.textContent = iss;
+            hidden.value = iss;
+
+            regionsDisplay.textContent = top3.filter(r => r.val > 0).map(r => r.name + ' (' + r.val + ')').join(', ') || '—';
+
+            if (iss > 15) {
+                badge.textContent = '✓ Meets inclusion (ISS > 15)';
+                badge.className = 'computed-status normal';
+            } else {
+                badge.textContent = '✗ ISS ≤ 15 — Does not meet inclusion criteria';
+                badge.className = 'computed-status elevated';
+            }
+        } else {
+            display.textContent = '—';
+            badge.textContent = '';
+            badge.className = 'computed-status';
+            regionsDisplay.textContent = '—';
+            hidden.value = '';
+        }
+        updateProgress();
+    }
+
+    // ===================================================================
+    //  PROGRESS BAR
+    // ===================================================================
+    function updateProgress() {
+        const coreFields = [
+            'patientCode', 'age', 'heartRate', 'sbp', 'gcsTotal',
+            'lactate', 'edAdmissionTime', 'lactateTime', 'collectorName', 'collectionDate'
+        ];
+        const radioGroups = ['eligibility', 'sex', 'betaBlocker', 'mechanism', 'traumaType', 'mortality', 'urgentSurgery', 'transfusion', 'icuAdmit'];
+
+        let filled = 0;
+        let total = coreFields.length + radioGroups.length;
+
+        coreFields.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && el.value && el.value.trim() !== '') filled++;
+        });
+
+        radioGroups.forEach(name => {
+            const checked = document.querySelector('input[name="' + name + '"]:checked');
+            if (checked) filled++;
+        });
+
+        // ISS
+        const issVal = document.getElementById('issScore').value;
+        total++;
+        if (issVal) filled++;
+
+        const pct = Math.round((filled / total) * 100);
+        document.getElementById('progressPercent').textContent = pct + '%';
+        document.getElementById('progressBarFill').style.width = pct + '%';
+
+        // Highlight active input styling
+        document.querySelectorAll('.input-field:not(.computed)').forEach(inp => {
+            if (inp.value && inp.value.trim() !== '') {
+                inp.classList.add('has-value');
+            } else {
+                inp.classList.remove('has-value');
+            }
+        });
+
+        // Update section progress steps
+        updateSectionSteps();
+    }
+
+    function updateSectionSteps() {
+        const sections = {
+            screening: ['patientCode'],
+            demographics: ['age'],
+            clinical: ['heartRate', 'sbp', 'gcsTotal'],
+            laboratory: ['lactate'],
+            indices: [],
+            outcomes: [],
+            meta: ['collectorName']
+        };
+        const radioSections = {
+            screening: ['eligibility'],
+            demographics: ['sex', 'betaBlocker', 'mechanism', 'traumaType'],
+            clinical: [],
+            laboratory: [],
+            indices: [],
+            outcomes: ['mortality', 'urgentSurgery', 'transfusion', 'icuAdmit'],
+            meta: []
+        };
+
+        document.querySelectorAll('.progress-step').forEach(step => {
+            const sec = step.dataset.section;
+            const fields = sections[sec] || [];
+            const radios = radioSections[sec] || [];
+            let all = true;
+            let any = false;
+
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.value && el.value.trim() !== '') any = true;
+                else all = false;
+            });
+            radios.forEach(name => {
+                const checked = document.querySelector('input[name="' + name + '"]:checked');
+                if (checked) any = true;
+                else all = false;
+            });
+
+            if (fields.length === 0 && radios.length === 0) {
+                // no tracked fields
+            } else if (all && (fields.length + radios.length > 0)) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (any) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+    }
+
+    // Listen on all inputs
+    document.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('input', updateProgress);
+        el.addEventListener('change', updateProgress);
+    });
+
+    // ===================================================================
+    //  COLLECT FORM DATA
+    // ===================================================================
+    function collectFormData() {
+        const getVal = id => {
+            const el = document.getElementById(id);
+            return el ? el.value : '';
+        };
+        const getRadio = name => {
+            const el = document.querySelector('input[name="' + name + '"]:checked');
+            return el ? el.value : '';
+        };
+        const getChecked = name => {
+            return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(cb => cb.value).join('; ');
+        };
+
+        // Compute lactate interval
+        let lactateInterval = '';
+        const admTime = getVal('edAdmissionTime');
+        const lacTime = getVal('lactateTime');
+        if (admTime && lacTime) {
+            const [aH, aM] = admTime.split(':').map(Number);
+            const [lH, lM] = lacTime.split(':').map(Number);
+            let diffMin = (lH * 60 + lM) - (aH * 60 + aM);
+            if (diffMin < 0) diffMin += 1440;
+            lactateInterval = (diffMin / 60).toFixed(1);
+        }
+
+        return {
+            'Patient Code': getVal('patientCode'),
+            'Eligibility': getRadio('eligibility'),
+            'Exclusion Reason': getVal('exclusionReason'),
+            'Exclusion Other': getVal('exclusionOther'),
+            'Age (years)': getVal('age'),
+            'Sex': getRadio('sex'),
+            'Comorbidities': getChecked('comorbid'),
+            'Comorbidity Other': getVal('comorbOtherText'),
+            'Beta-blocker Use': getRadio('betaBlocker'),
+            'Mechanism of Injury': getVal('mechanism') === 'Other' ? 'Other: ' + getVal('mechanismOther') : getVal('mechanism'),
+            'Trauma Type': getRadio('traumaType'),
+            'Pre-hospital Care': getChecked('prehospital'),
+            'ED Admission Time': getVal('edAdmissionTime'),
+            'Initial HR (bpm)': getVal('heartRate'),
+            'Initial SBP (mmHg)': getVal('sbp'),
+            'GCS Total': getVal('gcsTotal'),
+            'GCS Eye': getVal('gcsEye'),
+            'GCS Verbal': getVal('gcsVerbal'),
+            'GCS Motor': getVal('gcsMotor'),
+            'Serum Lactate (mmol/L)': getVal('lactate'),
+            'Lactate Draw Time': getVal('lactateTime'),
+            'Lactate Interval (hrs)': lactateInterval,
+            'Lactate Source': getRadio('lactateSource'),
+            'Initial Hb (g/dL)': getVal('hemoglobin'),
+            'Shock Index': getVal('shockIndex'),
+            'AIS Head/Neck': getVal('aisHead'),
+            'AIS Face': getVal('aisFace'),
+            'AIS Chest': getVal('aisChest'),
+            'AIS Abdomen': getVal('aisAbdomen'),
+            'AIS Extremities': getVal('aisExtremity'),
+            'AIS External': getVal('aisExternal'),
+            'ISS': getVal('issScore'),
+            'ISS Sources': getChecked('issSources'),
+            'In-Hospital Mortality': getRadio('mortality'),
+            'Day of Death': getVal('deathDay'),
+            'Cause of Death': getVal('causeOfDeath'),
+            'Urgent Surgery': getRadio('urgentSurgery'),
+            'Surgery Type': getVal('surgeryType'),
+            'Blood Transfusion': getRadio('transfusion'),
+            'pRBC Units': getVal('prbcUnits'),
+            'ICU Admission': getRadio('icuAdmit'),
+            'ICU LOS (days)': getVal('icuLOS'),
+            'Hospital LOS (days)': getVal('hospitalLOS'),
+            'Collected By': getVal('collectorName'),
+            'Collection Date': getVal('collectionDate'),
+            'Verified By': getVal('verifierName'),
+            'Verification Date': getVal('verificationDate')
+        };
+    }
+
+    // ===================================================================
+    //  VALIDATE CORE FIELDS
+    // ===================================================================
+    function validateCoreFields() {
+        const code = document.getElementById('patientCode').value.trim();
+        if (!code) {
+            showToast('Patient Code is required.', 'error');
+            document.getElementById('patientCode').focus();
+            return false;
+        }
+
+        // Check for duplicate code
+        if (allRecords.some(r => r['Patient Code'] === code)) {
+            showToast('Duplicate Patient Code: ' + code + '. Please use a unique code.', 'error');
+            document.getElementById('patientCode').focus();
+            return false;
+        }
+
+        const eligibility = document.querySelector('input[name="eligibility"]:checked');
+        if (!eligibility) {
+            showToast('Please select eligibility status.', 'error');
+            return false;
+        }
+
+        // If ineligible, only code and reason needed
+        if (eligibility.value === 'Ineligible') {
+            const reason = document.getElementById('exclusionReason').value;
+            if (!reason) {
+                showToast('Please select a reason for exclusion.', 'error');
+                return false;
+            }
+            return true;
+        }
+
+        // If eligible, check core fields
+        const required = [
+            { id: 'age', label: 'Age' },
+            { id: 'heartRate', label: 'Heart Rate' },
+            { id: 'sbp', label: 'Systolic Blood Pressure' },
+            { id: 'gcsTotal', label: 'GCS Total' },
+            { id: 'lactate', label: 'Serum Lactate' },
+            { id: 'collectorName', label: 'Collector Name' },
+            { id: 'collectionDate', label: 'Collection Date' }
+        ];
+
+        for (const f of required) {
+            const el = document.getElementById(f.id);
+            if (!el.value || el.value.trim() === '') {
+                showToast(f.label + ' is required.', 'error');
+                el.focus();
+                el.classList.add('has-error');
+                setTimeout(() => el.classList.remove('has-error'), 3000);
+                return false;
+            }
+        }
+
+        const requiredRadios = [
+            { name: 'sex', label: 'Sex' },
+            { name: 'mortality', label: 'In-Hospital Mortality' }
+        ];
+
+        for (const r of requiredRadios) {
+            if (!document.querySelector('input[name="' + r.name + '"]:checked')) {
+                showToast(r.label + ' is required.', 'error');
+                return false;
+            }
+        }
+
+        // Range validation
+        const hr = parseFloat(document.getElementById('heartRate').value);
+        if (hr < 30 || hr > 250) {
+            showToast('Heart Rate out of plausible range (30–250). Please verify.', 'warning');
+        }
+
+        const sbp = parseFloat(document.getElementById('sbp').value);
+        if (sbp < 40 || sbp > 300) {
+            showToast('SBP out of plausible range (40–300). Please verify.', 'warning');
+        }
+
+        return true;
+    }
+
+    // ===================================================================
+    //  SAVE RECORD
+    // ===================================================================
+    function saveRecord() {
+        if (!validateCoreFields()) return;
+
+        const data = collectFormData();
+        allRecords.push(data);
+        localStorage.setItem('polytraumaRecords', JSON.stringify(allRecords));
+        updateRecordCounter();
+        updateRecordsTable();
+
+        const code = data['Patient Code'];
+        showToast('Record ' + code + ' saved successfully! (' + allRecords.length + ' total)', 'success');
+
+        clearForm();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ===================================================================
+    //  EXPORT TO EXCEL
+    // ===================================================================
+    function exportToExcel() {
+        if (allRecords.length === 0) {
+            showToast('No records to export. Save at least one record first.', 'warning');
+            return;
+        }
+
+        const ws = XLSX.utils.json_to_sheet(allRecords);
+
+        // Column widths
+        const colWidths = Object.keys(allRecords[0]).map(key => ({
+            wch: Math.max(key.length + 2, 15)
+        }));
+        ws['!cols'] = colWidths;
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Polytrauma Data');
+
+        const filename = 'Polytrauma_SI_Lactate_Data_' + new Date().toISOString().slice(0, 10) + '.xlsx';
+        XLSX.writeFile(wb, filename);
+
+        showToast('Excel file exported: ' + filename + ' (' + allRecords.length + ' records)', 'success');
+    }
+
+    // ===================================================================
+    //  VIEW RECORDS TABLE
+    // ===================================================================
+    function viewRecords() {
+        const container = document.getElementById('recordsTableContainer');
+        if (container.style.display === 'none') {
+            container.style.display = 'block';
+            updateRecordsTable();
+            container.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            container.style.display = 'none';
+        }
+    }
+
+    function updateRecordsTable() {
+        const tbody = document.getElementById('recordsTableBody');
+        tbody.innerHTML = '';
+
+        allRecords.forEach((rec, idx) => {
+            const tr = document.createElement('tr');
+            const si = rec['Shock Index'] ? parseFloat(rec['Shock Index']) : null;
+            const siStyle = si >= 0.9 ? 'color:var(--danger-600);font-weight:700;' : 'color:var(--success-600);';
+            const mortStyle = rec['In-Hospital Mortality'] === 'Dead' ? 'color:var(--danger-600);font-weight:700;' : 'color:var(--success-600);';
+
+            tr.innerHTML = `
+                <td>${idx + 1}</td>
+                <td style="font-weight:600;">${rec['Patient Code']}</td>
+                <td>${rec['Age (years)']}</td>
+                <td>${rec['Sex']}</td>
+                <td>${rec['Mechanism of Injury']}</td>
+                <td>${rec['Initial HR (bpm)']}</td>
+                <td>${rec['Initial SBP (mmHg)']}</td>
+                <td style="${siStyle}">${rec['Shock Index'] || '—'}</td>
+                <td>${rec['Serum Lactate (mmol/L)']}</td>
+                <td>${rec['GCS Total']}</td>
+                <td>${rec['ISS'] || '—'}</td>
+                <td style="${mortStyle}">${rec['In-Hospital Mortality'] || '—'}</td>
+                <td><button class="btn btn-danger" style="padding:4px 10px;font-size:0.7rem;" onclick="deleteRecord(${idx})">✕</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('viewCount').textContent = allRecords.length;
+    }
+
+    function deleteRecord(idx) {
+        if (confirm('Delete record ' + allRecords[idx]['Patient Code'] + '? This cannot be undone.')) {
+            const code = allRecords[idx]['Patient Code'];
+            allRecords.splice(idx, 1);
+            localStorage.setItem('polytraumaRecords', JSON.stringify(allRecords));
+            updateRecordCounter();
+            updateRecordsTable();
+            showToast('Record ' + code + ' deleted.', 'warning');
+        }
+    }
+
+    // ===================================================================
+    //  CLEAR FORM
+    // ===================================================================
+    function clearForm() {
+        document.getElementById('dataCollectionForm').reset();
+
+        // Reset computed values
+        document.getElementById('shockIndexDisplay').textContent = '—';
+        document.getElementById('shockIndexBadge').textContent = '';
+        document.getElementById('shockIndexBadge').className = 'computed-status';
+        document.getElementById('siClassDisplay').textContent = '—';
+        document.getElementById('siClassDisplay').style.color = '';
+        document.getElementById('shockIndex').value = '';
+
+        document.getElementById('issDisplay').textContent = '—';
+        document.getElementById('issBadge').textContent = '';
+        document.getElementById('issBadge').className = 'computed-status';
+        document.getElementById('issRegionsDisplay').textContent = '—';
+        document.getElementById('issScore').value = '';
+
+        document.getElementById('lactateIntervalDisplay').textContent = '— hrs';
+        document.getElementById('lactateStatusCard').style.display = 'none';
+
+        // Reset conditional fields
+        document.querySelectorAll('.conditional-field').forEach(f => f.classList.remove('visible'));
+
+        // Reset input styling
+        document.querySelectorAll('.input-field').forEach(i => {
+            i.classList.remove('has-value', 'has-error');
+        });
+
+        // Collapse all sections except screening
+        document.querySelectorAll('.section-card').forEach(card => card.classList.remove('open'));
+        document.getElementById('sectionScreening').classList.add('open');
+
+        // Reset collection date
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('collectionDate').value = today;
+
+        updateProgress();
+    }
+
+    // ===================================================================
+    //  RECORD COUNTER
+    // ===================================================================
+    function updateRecordCounter() {
+        const counter = document.getElementById('recordCounter');
+        const countVal = document.getElementById('recordCountValue');
+        const viewCount = document.getElementById('viewCount');
+
+        countVal.textContent = allRecords.length;
+        viewCount.textContent = allRecords.length;
+
+        if (allRecords.length > 0) {
+            counter.style.display = 'flex';
+        } else {
+            counter.style.display = 'none';
+        }
+    }
+
+    // ===================================================================
+    //  TOAST NOTIFICATIONS
+    // ===================================================================
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast toast-' + type;
+
+        const icons = {
+            success: '✓',
+            error: '✕',
+            warning: '⚠'
+        };
+
+        toast.innerHTML = '<span style="font-size:1.1rem;">' + (icons[type] || '') + '</span> ' + message;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 3500);
+    }
+
+    // ===================================================================
+    //  PROGRESS STEP CLICK — SCROLL TO SECTION
+    // ===================================================================
+    document.querySelectorAll('.progress-step').forEach(step => {
+        step.addEventListener('click', function() {
+            const sec = this.dataset.section;
+            const sectionMap = {
+                screening: 'sectionScreening',
+                demographics: 'sectionDemographics',
+                clinical: 'sectionClinical',
+                laboratory: 'sectionLaboratory',
+                indices: 'sectionIndices',
+                outcomes: 'sectionOutcomes',
+                meta: 'sectionMeta'
+            };
+            const el = document.getElementById(sectionMap[sec]);
+            if (el) {
+                el.classList.add('open');
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
