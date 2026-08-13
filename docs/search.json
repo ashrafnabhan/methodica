@@ -68,5 +68,103 @@
     "title": "Methodica",
     "section": "",
     "text": "Designing Clinical Research program offers a focused approach to understanding and conducting medical research. This program equips trainees with essential research skills through modules that emphasize both theoretical and practical aspects."
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#the-essentials",
+    "href": "reveal/rct_methodica.html#the-essentials",
+    "title": "Clinical Trials",
+    "section": "The essentials",
+    "text": "The essentials\n\nType of trial: parallel, multi-arm, cross-over\nFramework: superiority, non-inferiority\nControlled: no control, placebo, active\nPhase: Only for drug trials"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#allocation",
+    "href": "reveal/rct_methodica.html#allocation",
+    "title": "Clinical Trials",
+    "section": "Allocation",
+    "text": "Allocation\n\nAllocation:\n\nNon-random\nQuasi-random\nRandom\n\nUnit of allocation:\n\nindividual\ncluster"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#what-a-researcher-should-do",
+    "href": "reveal/rct_methodica.html#what-a-researcher-should-do",
+    "title": "Clinical Trials",
+    "section": "What a researcher should do",
+    "text": "What a researcher should do\n\nEstimate the number of participants needed to achieve study objectives\nDescribe how it was determined\nIndicate clinical and statistical assumptions supporting calculations."
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#practical-exercise",
+    "href": "reveal/rct_methodica.html#practical-exercise",
+    "title": "Clinical Trials",
+    "section": "Practical exercise",
+    "text": "Practical exercise\n\nClinical question\n\nAmong ICU patients with septic shock and AKI without urgent need for dialysis, does an early, compared to delayed, initiation of renal replacement therapy reduce all-cause mortality at 90 days?"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#the-study-hypothesis",
+    "href": "reveal/rct_methodica.html#the-study-hypothesis",
+    "title": "Clinical Trials",
+    "section": "The study hypothesis",
+    "text": "The study hypothesis\n\nThe null and alternative hypotheses are:\n\nH0 : Pt - Pc = 0​\nH1 : Pt - Pc ≠ 0​"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#arguments",
+    "href": "reveal/rct_methodica.html#arguments",
+    "title": "Clinical Trials",
+    "section": "Arguments",
+    "text": "Arguments\n\nthe expected proportion for the treatment group\nthe expected proportion for the control group\nthe equivalence limit\nthe required study power\nthe desired alpha level\nsided.test"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#clinical-and-statistical-assumptions",
+    "href": "reveal/rct_methodica.html#clinical-and-statistical-assumptions",
+    "title": "Clinical Trials",
+    "section": "Clinical and statistical assumptions",
+    "text": "Clinical and statistical assumptions\n\ntreat = .4\ncontrol = .5\ndelta = 0\npower = .8\nalpha = .05\nsided.test = 2"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#calculation",
+    "href": "reveal/rct_methodica.html#calculation",
+    "title": "Clinical Trials",
+    "section": "Calculation",
+    "text": "Calculation\n\nuse our online tool https://ecebm.shinyapps.io/Power\nuse epiR package in R:\n\nepi.sssupb(n = NA, treat = .4, control = .5, delta = 0, power = .8, alpha = .05, sided.test = 2)\n\nThe estimated sample size is 770 [385 participants per arm]"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#simple-random-allocation",
+    "href": "reveal/rct_methodica.html#simple-random-allocation",
+    "title": "Clinical Trials",
+    "section": "Simple random allocation",
+    "text": "Simple random allocation\n\nEqual probability\nUnpredictability\nNo guarantee of balance"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#random-allocation-rule",
+    "href": "reveal/rct_methodica.html#random-allocation-rule",
+    "title": "Clinical Trials",
+    "section": "Random allocation rule",
+    "text": "Random allocation rule\n\nForced equal allocation\nVulnerability to selection bias late in trial"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#block-randomization",
+    "href": "reveal/rct_methodica.html#block-randomization",
+    "title": "Clinical Trials",
+    "section": "Block randomization",
+    "text": "Block randomization\n\nBalanced allocation within blocks\nProtection against temporal trends\nPredictability risk with fixed block sizes"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#tools",
+    "href": "reveal/rct_methodica.html#tools",
+    "title": "Clinical Trials",
+    "section": "Tools",
+    "text": "Tools\n\nuse R functions\nuse our online tool https://ecebm.shinyapps.io/randalloc"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#open-access-primary-registries",
+    "href": "reveal/rct_methodica.html#open-access-primary-registries",
+    "title": "Clinical Trials",
+    "section": "Open access primary registries",
+    "text": "Open access primary registries\n\nis Mandatory\nExample\n\nPACTR\nClinicaltrials.gov\n\nUse SPIRIT for the protocol\n\nPerfectly aligns with trial registries"
+  },
+  {
+    "objectID": "reveal/rct_methodica.html#comments-rct",
+    "href": "reveal/rct_methodica.html#comments-rct",
+    "title": "Clinical Trials",
+    "section": "Comments: RCT",
+    "text": "Comments: RCT\n\nSelection bias\nSerious contradiction in retinopathy inclusion criterion\nOnly one HbA1c measurement at the end of follow up\nIntervention was not standardized\nComposite outcome problem\nFollow-up Duration"
   }
 ]
